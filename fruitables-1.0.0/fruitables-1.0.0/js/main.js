@@ -157,6 +157,8 @@ let cart = [];
 // Hàm cập nhật giỏ hàng trên giao diện
 function updateCartUI() {
     let cartTableBody = document.querySelector("tbody"); // Chọn tbody của bảng
+    if (!cartTableBody) return; // Kiểm tra nếu không có bảng (tránh lỗi trên index.html)
+
     cartTableBody.innerHTML = ""; // Xóa nội dung cũ
 
     let total = 0;
@@ -173,7 +175,7 @@ function updateCartUI() {
                 </div>
             </th>
             <td><p class="mb-0 mt-4">${item.name}</p></td>
-            <td><p class="mb-0 mt-4">$${item.price.toFixed(2)}</p></td>
+            <td><p class="mb-0 mt-4">${item.price.toFixed(3)}đ</p></td>
             <td>
                 <div class="input-group quantity mt-4" style="width: 100px;">
                     <div class="input-group-btn">
@@ -189,7 +191,7 @@ function updateCartUI() {
                     </div>
                 </div>
             </td>
-            <td><p class="mb-0 mt-4">$${itemTotal.toFixed(2)}</p></td>
+            <td><p class="mb-0 mt-4">${itemTotal.toFixed(3)}đ</p></td>
             <td>
                 <button class="btn btn-md rounded-circle bg-light border mt-4 btn-remove" data-index="${index}">
                     <i class="fa fa-times text-danger"></i>
@@ -200,37 +202,20 @@ function updateCartUI() {
     });
 
     // Cập nhật tổng tiền
-    document.querySelector(".cart-total").textContent = `$${total.toFixed(2)}`;
+    document.querySelector(".cart-subtotal").textContent = `${total.toFixed(3)}đ`;
+    document.querySelector(".cart-total").textContent = `${total.toFixed(3)}đ`;
 
-    // Thêm sự kiện cho các nút tăng/giảm số lượng
-    document.querySelectorAll(".btn-minus").forEach(button => {
-        button.addEventListener("click", function () {
-            let index = this.getAttribute("data-index");
-            if (cart[index].quantity > 1) {
-                cart[index].quantity--;
-            } else {
-                cart.splice(index, 1); // Xóa nếu số lượng về 0
-            }
-            updateCartUI();
-        });
-    });
+    // Thêm sự kiện cho các nút sau khi cập nhật giao diện
+    addEventListenersToCartButtons();
+}
 
-    document.querySelectorAll(".btn-plus").forEach(button => {
-        button.addEventListener("click", function () {
-            let index = this.getAttribute("data-index");
-            cart[index].quantity++;
-            updateCartUI();
-        });
-    });
-
-    // Thêm sự kiện xóa sản phẩm
-    document.querySelectorAll(".btn-remove").forEach(button => {
-        button.addEventListener("click", function () {
-            let index = this.getAttribute("data-index");
-            cart.splice(index, 1);
-            updateCartUI();
-        });
-    });
+// Hàm cập nhật số lượng sản phẩm trên icon giỏ hàng
+function updateCartCount() {
+    let cartCountElement = document.querySelector(".cart-count");
+    if (cartCountElement) {
+        let totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountElement.textContent = totalQuantity;
+    }
 }
 
 // Hàm thêm sản phẩm vào giỏ hàng
@@ -245,8 +230,49 @@ function addToCart(name, price, image) {
     localStorage.setItem("cart", JSON.stringify(cart));
 
     updateCartUI();
+    updateCartCount();
+
+    alert(`Đã thêm sản phẩm "${name}" vào giỏ hàng!`);
 }
 
+// Gán sự kiện cho các nút (+), (-), (xóa) trong giỏ hàng
+function addEventListenersToCartButtons() {
+    document.querySelectorAll(".btn-minus").forEach(button => {
+        button.addEventListener("click", function () {
+            let index = this.getAttribute("data-index");
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+            } else {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartUI();
+            updateCartCount();
+        });
+    });
+
+    document.querySelectorAll(".btn-plus").forEach(button => {
+        button.addEventListener("click", function () {
+            let index = this.getAttribute("data-index");
+            cart[index].quantity++;
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartUI();
+            updateCartCount();
+        });
+    });
+
+    document.querySelectorAll(".btn-remove").forEach(button => {
+        button.addEventListener("click", function () {
+            let index = this.getAttribute("data-index");
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartUI();
+            updateCartCount();
+        });
+    });
+}
+
+// Thêm sản phẩm vào giỏ hàng khi bấm nút "Add to Cart"
 document.querySelectorAll(".add-to-cart").forEach(button => {
     button.addEventListener("click", function (event) {
         event.preventDefault();
@@ -254,14 +280,12 @@ document.querySelectorAll(".add-to-cart").forEach(button => {
         let name = this.getAttribute("data-name");
         let price = this.getAttribute("data-price");
 
-        // Tìm phần tử cha .fruite-item
         let productElement = this.closest(".fruite-item");
         if (!productElement) {
             console.error("Không tìm thấy phần tử sản phẩm!", this);
             return;
         }
 
-        // Tìm hình ảnh bên trong .fruite-img
         let imageElement = productElement.querySelector(".fruite-img img");
         if (!imageElement) {
             console.error("Không tìm thấy ảnh sản phẩm!", this);
@@ -270,17 +294,66 @@ document.querySelectorAll(".add-to-cart").forEach(button => {
         let image = imageElement.src;
 
         addToCart(name, price, image);
+        updateCartCount();
     });
 });
 
+// Khi trang tải lại, khôi phục giỏ hàng từ localStorage
 document.addEventListener("DOMContentLoaded", function () {
     let storedCart = localStorage.getItem("cart");
     if (storedCart) {
         cart = JSON.parse(storedCart);
-        updateCartUI();
     }
+    
+    updateCartUI();
+    updateCartCount();
 });
 
+// document.querySelector(".btn .text-uppercase").addEventListener("click", function () {
+//     window.location.href = "chackout.html";
+// });
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM đã tải xong!");
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    if (window.location.pathname.includes("shop-detail.html")) {
+        console.log("Đang ở shop-detail.html");
+
+        const productName = getQueryParam("name") || "Sản phẩm không xác định";
+        const productPrice = getQueryParam("price") || "0";
+        const productImg = getQueryParam("img") ? "img/" + getQueryParam("img") : "img/default.jpg";
+
+        console.log("Tên sản phẩm:", productName);
+        console.log("Giá sản phẩm:", productPrice);
+        console.log("Ảnh sản phẩm:", productImg);
+
+        const productImage = document.querySelector(".product-image");
+        const productTitle = document.querySelector(".product-name");
+        const productPriceTag = document.querySelector(".product-price");
+
+        if (productImage) {
+            productImage.src = productImg;
+            console.log("Cập nhật ảnh thành công!");
+        } else console.error("Không tìm thấy phần tử ảnh!");
+
+        if (productTitle) {
+            productTitle.innerText = productName;
+            console.log("Cập nhật tên sản phẩm thành công!");
+        } else console.error("Không tìm thấy phần tử tên sản phẩm!");
+
+        if (productPriceTag) {
+            productPriceTag.innerText = productPrice + "đ";
+            console.log("Cập nhật giá sản phẩm thành công!");
+        } else console.error("Không tìm thấy phần tử giá sản phẩm!");
+    } else {
+        console.log("Không phải trang shop-detail.html");
+    }
+});
 
 

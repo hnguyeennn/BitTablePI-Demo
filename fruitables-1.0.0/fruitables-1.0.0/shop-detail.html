@@ -29,7 +29,7 @@
         <link href="css/style.css" rel="stylesheet">
     </head>
 
-    <body>
+    <body >
 
         <!-- Spinner Start -->
         <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
@@ -43,13 +43,8 @@
             <div class="container topbar bg-primary d-none d-lg-block">
                 <div class="d-flex justify-content-between">
                     <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">123 Street, New York</a></small>
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Email@Example.com</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
-                        <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
-                        <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
+                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">229/85/4 Tây Thạnh, Tây Thạnh, Tân Phú, Hồ Chí  Minh</a></small>
+                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">hnguyeenn@ittc.edu.vn</a></small>
                     </div>
                 </div>
             </div>
@@ -60,27 +55,14 @@
                         <span class="fa fa-bars text-primary"></span>
                     </button>
                     <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                        <div class="navbar-nav mx-auto">
-                            <a href="index.html" class="nav-item nav-link">Home</a>
-                            <a href="shop.html" class="nav-item nav-link">Shop</a>
-                            <a href="shop-detail.html" class="nav-item nav-link active">Shop Detail</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                    <a href="cart.html" class="dropdown-item">Cart</a>
-                                    <a href="chackout.html" class="dropdown-item">Chackout</a>
-                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                    <a href="404.html" class="dropdown-item">404 Page</a>
-                                </div>
-                            </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        </div>
+                        <div class="navbar-nav mx-auto"></div>
                         <div class="d-flex m-3 me-0">
                             <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
-                            <a href="#" class="position-relative me-4 my-auto">
+                            <a href="cart.html" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
-                            </a>
+                                <span class="cart-count position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" 
+                                      style="top: -5px; left: 15px; height: 20px; min-width: 20px;">0</span>
+                            </a>                                                      
                             <a href="#" class="my-auto">
                                 <i class="fas fa-user fa-2x"></i>
                             </a>
@@ -90,7 +72,6 @@
             </div>
         </div>
         <!-- Navbar End -->
-
 
         <!-- Modal Search Start -->
         <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -115,11 +96,6 @@
         <!-- Single Page Header start -->
         <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Shop Detail</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active text-white">Shop Detail</li>
-            </ol>
         </div>
         <!-- Single Page Header End -->
 
@@ -133,14 +109,15 @@
                             <div class="col-lg-6">
                                 <div class="border rounded">
                                     <a href="#">
-                                        <img src="img/single-item.jpg" class="img-fluid rounded" alt="Image">
+                                        <img src="img/vegetable-item-7.jpg" class="img-fluid rounded product-image" alt="Product Image">
                                     </a>
                                 </div>
                             </div>
+                            
                             <div class="col-lg-6">
-                                <h4 class="fw-bold mb-3">Brocoli</h4>
+                                <h4 class="fw-bold mb-3 product-name">Tên sản phẩm</h4>
                                 <p class="mb-3">Category: Vegetables</p>
-                                <h5 class="fw-bold mb-3">3,35 $</h5>
+                                <h5 class="fw-bold mb-3 product-price">0đ</h5>
                                 <div class="d-flex mb-4">
                                     <i class="fa fa-star text-secondary"></i>
                                     <i class="fa fa-star text-secondary"></i>
@@ -152,7 +129,7 @@
                                 <p class="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish</p>
                                 <div class="input-group quantity mb-5" style="width: 100px;">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
+                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
                                             <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
@@ -163,8 +140,11 @@
                                         </button>
                                     </div>
                                 </div>
-                                <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                </a>
                             </div>
+                            
                             <div class="col-lg-12">
                                 <nav>
                                     <div class="nav nav-tabs mb-3">
@@ -319,41 +299,7 @@
                                     <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
                                     <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                                 </div>
-                                <div class="mb-4">
-                                    <h4>Categories</h4>
-                                    <ul class="list-unstyled fruite-categorie">
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Apples</a>
-                                                <span>(3)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Oranges</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Strawbery</a>
-                                                <span>(2)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Banana</a>
-                                                <span>(8)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="#"><i class="fas fa-apple-alt me-2"></i>Pumpkin</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <div class="mb-4"></div>     
                             </div>
                             <div class="col-lg-12">
                                 <h4 class="mb-4">Featured products</h4>
