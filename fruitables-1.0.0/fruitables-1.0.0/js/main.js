@@ -156,11 +156,17 @@ let cart = [];
 
 // Hàm cập nhật giỏ hàng trên giao diện
 function updateCartUI() {
+    // Kiểm tra nếu không phải trang cart.html hoặc checkout.html thì không thực hiện
+    if (!window.location.pathname.includes("cart.html") && !window.location.pathname.includes("chackout.html")) {
+        return;
+    }
+
     let cartTableBody = document.querySelector("tbody"); // Chọn tbody của bảng
-    if (!cartTableBody) return; // Kiểm tra nếu không có bảng (tránh lỗi trên index.html)
+    if (!cartTableBody) return; // Tránh lỗi nếu không có bảng
 
     cartTableBody.innerHTML = ""; // Xóa nội dung cũ
 
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let total = 0;
 
     cart.forEach((item, index) => {
@@ -202,11 +208,18 @@ function updateCartUI() {
     });
 
     // Cập nhật tổng tiền
-    document.querySelector(".cart-total").textContent = `${total}đ`;
+    let cartTotalElement = document.querySelector(".cart-total");
+    if (cartTotalElement) {
+        cartTotalElement.textContent = `${total}đ`;
+    }
 
     // Thêm sự kiện cho các nút sau khi cập nhật giao diện
     addEventListenersToCartButtons();
 }
+
+// Gọi hàm updateCartUI() khi tải trang để hiển thị giỏ hàng
+document.addEventListener("DOMContentLoaded", updateCartUI);
+
 
 // Hàm cập nhật số lượng sản phẩm trên icon giỏ hàng
 function updateCartCount() {
@@ -387,13 +400,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM đã tải xong!");
+
+    // Xử lý đặt hàng và lưu vào lịch sử giao dịch
     let orderButton = document.getElementById("orderButton");
 
     if (orderButton) {
         orderButton.addEventListener("click", function () {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            if (cart.length === 0) {
+                alert("⚠ Giỏ hàng đang trống!");
+                return;
+            }
+
+            // Lấy danh sách giao dịch hiện tại
+            let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+            // Tạo ID giao dịch tự tăng
+            let transactionID = transactions.length > 0 ? transactions[transactions.length - 1].id + 1 : 1;
+
+            // Lưu từng sản phẩm vào lịch sử giao dịch
+            cart.forEach(item => {
+                transactions.push({
+                    id: transactionID,
+                    name: item.name
+                });
+            });
+
+            // Lưu vào localStorage
+            localStorage.setItem("transactions", JSON.stringify(transactions));
+
+            // Hiển thị thông báo đặt hàng thành công
             alert("🎉 Đặt hàng thành công! Cảm ơn bạn đã mua sắm. 🛒");
 
-            // Xóa giỏ hàng khỏi LocalStorage (nếu có)
+            // Xóa giỏ hàng khỏi LocalStorage
             localStorage.removeItem("cart");
 
             // Xóa giỏ hàng trên giao diện
@@ -402,11 +443,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 cartContainer.innerHTML = "";
             }
 
-            // Chuyển về trang chủ
-            window.location.href = "index.html";
+            // Chuyển đến trang lịch sử giao dịch
+            window.location.href = "transaction.html";
         });
-    } else {
-        console.error("Không tìm thấy nút đặt hàng!");
+    }
+
+    // Hiển thị lịch sử giao dịch trên transaction.html
+    let transactionBody = document.getElementById("transaction-body");
+    let clearButton = document.getElementById("clear-transactions");
+
+    if (transactionBody) {
+        let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+        if (transactions.length === 0) {
+            transactionBody.innerHTML = "<tr><td colspan='2' class='text-center'>Chưa có giao dịch nào!</td></tr>";
+        } else {
+            transactions.forEach(transaction => {
+                let row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${transaction.id}</td>
+                    <td>${transaction.name}</td>
+                `;
+                transactionBody.appendChild(row);
+            });
+        }
+    }
+
+    // Xóa lịch sử giao dịch
+    if (clearButton) {
+        clearButton.addEventListener("click", function () {
+            if (confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử giao dịch?")) {
+                localStorage.removeItem("transactions");
+                transactionBody.innerHTML = "<tr><td colspan='2' class='text-center'>Chưa có giao dịch nào!</td></tr>";
+                alert("🗑 Lịch sử giao dịch đã được xóa!");
+            }
+        });
     }
 });
 
